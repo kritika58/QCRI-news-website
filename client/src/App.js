@@ -1,39 +1,35 @@
-import React, { Component } from "react";
-import SelectedFoods from "./SelectedFoods";
-import FoodSearch from "./FoodSearch";
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
 
 class App extends Component {
+  
   state = {
-    selectedFoods: []
-  };
+    names: []
+  }
 
-  removeFoodItem = itemIndex => {
-    const filteredFoods = this.state.selectedFoods.filter(
-      (item, idx) => itemIndex !== idx
-    );
-    this.setState({ selectedFoods: filteredFoods });
-  };
+  componentDidMount(){
+    this.getnames();
+  }
+  
+  getnames = _ => {
+    fetch('http://localhost:3000/getnames')
+    .then(response => response.json())
+    .then(response => this.setState({names: response.data}))
+    .catch(err => console.error(err))
+  }
 
-  addFood = food => {
-    const newFoods = this.state.selectedFoods.concat(food);
-    this.setState({ selectedFoods: newFoods });
-  };
-
+  rendergetnames= (({serial, name}) => <div key={serial}>{name}</div>);
+  
   render() {
-    const { selectedFoods } = this.state;
-
+    const { names } =this.state;
     return (
       <div className="App">
-        <div className="ui text container">
-          <SelectedFoods
-            foods={selectedFoods}
-            onFoodClick={this.removeFoodItem}
-          />
-          <FoodSearch onFoodClick={this.addFood} />
-        </div>
+      {names.map(this.rendergetnames)}
       </div>
     );
   }
 }
+
 
 export default App;
